@@ -83,7 +83,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_curv">
+       <widget class="MyLabel" name="label_curv">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(223, 223, 223);</string>
         </property>
@@ -167,6 +167,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyLabel</class>
+   <extends>QLabel</extends>
+   <header>__main__</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
