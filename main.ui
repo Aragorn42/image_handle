@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>353</height>
+    <width>663</width>
+    <height>486</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,12,3">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,0,0,0,0,10">
+     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,10">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -105,7 +105,7 @@
          <string notr="true">background-color: rgb(223, 223, 223);</string>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -125,7 +125,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>650</width>
+     <width>663</width>
      <height>22</height>
     </rect>
    </property>
