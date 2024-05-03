@@ -1,24 +1,39 @@
-import curves
+import curves as curves
 import numpy as np
 import main
-import cv2
+import cv_funcs
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap, QColor, QPainter
 
 class Curves(main.main_window):
-    def __init__(self, src, label1, label2): #src ndarray
+    def __init__(self, src, label1, label2, label3):
         self.C = curves.Curves()
         self.src = src
         self.curves_mat = np.ones((256, 256, 3), dtype=np.uint8)
         self.label1 = label1
         self.label2 = label2
+        self.label3 = label3
         
-    def update(self): #cv::U8C3, cv::U8C3, curve_win, main_win
+    def update(self, chan):
         self.C.draw(self.curves_mat)
         super().display_image(self.label1, self.curves_mat)
-        super().display_image(self.label2, self.C.adjust(self.src))
+        temp_img = self.C.adjust(self.src)
+        super().display_image(self.label2, temp_img)
+        super().display_image(self.label3, self.__display_histogram(self.label3, chan, temp_img))
         
+    def __display_histogram(self, label, chan, img) -> None: # only in Curves.update()
+        hist, color = cv_funcs.calc_hist(img, chan)
+        pixmap = QPixmap(label.width(), label.height())
+        pixmap.fill(QColor(223, 223, 223))
+        painter = QPainter(pixmap)
+        painter.setPen(color)
+        for i in range(256):
+            height = hist[i][0] * label.height() / max(hist)[0]  # Access the value in the single-element array
+            painter.drawLine(i, label.height(), i, label.height() - height)
+        painter.end()
+        return pixmap
+               
     def chan_cho(self, s):
-        print(s)
         if s == "R":
             self.C.channel_chose(1)
         elif s == "G":
@@ -27,18 +42,15 @@ class Curves(main.main_window):
             self.C.channel_chose(3)
         else:
             self.C.channel_chose(4)
-        print("chose success")
-        self.update()
+        self.update(s)
         
-    def callbackMouseEvent(self, mouseEvent, pos):
+    def callbackMouseEvent(self, mouseEvent, pos, chan):
         if mouseEvent == "press":
             self.C.mouseDown(pos[0], pos[1])
-            self.update()
         elif mouseEvent == "move":
             self.C.mouseMove(pos[0], pos[1])
-            self.update()
         elif mouseEvent == "up":
             self.C.mouseUp(pos[0], pos[1])
-            self.update()
+        self.update(chan)
     
         
