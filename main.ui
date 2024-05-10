@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,12,3">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,10">
+     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,10">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -40,6 +40,16 @@
       </item>
       <item>
        <widget class="QComboBox" name="cbox_prev_channel"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>预览缩放倍率</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbox_res"/>
       </item>
       <item>
        <widget class="QLabel" name="label_3">
