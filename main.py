@@ -24,30 +24,34 @@ class main_window:
         self.ui.cbox_curv_channel.addItems(["RGB", "R", "G", "B"])
         self.ui.cbox_res.addItems(["1x", "4x", "8x", "16x"])
         self.ui.cbox_function.addItems(["调整亮度", "调整饱和度", "调整曲线"])
-        self.ui.cbox_curv_channel.currentIndexChanged.connect(lambda x: self.ca.update() if self.ca\
-            else self.open_file()) # 如果还未导入图片, 则导入图片
 
-        self.ui.slider_right.valueChanged.connect(lambda: self.adjust_by_bar(self.ui.label_prev))
-        self.ui.cbox_function.currentIndexChanged.connect(lambda: self.adjust_by_bar(self.ui.label_main))
 
     def prepare_after_load_img(self, file_name):
+        print("again again")
         img = cv2.imread(file_name)
         height, width, _ = img.shape
         self.handle_img = img
         self.update_small_img()
+
         self.ca = curves_adjust.Curves(self, self.handle_img, self.small_img, self.ui.label_curv,\
                                        self.ui.label_main, self.ui.label_hist, self.ui.label_prev)
         self.ui.label_curv.setCurve(self.ca, self)
         self.ca.update()
-        self.ui.cbox_res.currentIndexChanged.connect(self.update_small_img())
+        self.ui.cbox_curv_channel.currentIndexChanged.connect(lambda x: self.ca.update() if self.ca\
+            else self.open_file()) # 如果还未导入图片, 则导入图片
+        self.ui.slider_right.valueChanged.connect(lambda: self.adjust_by_bar(self.ui.label_prev))
+        self.ui.cbox_function.currentIndexChanged.connect(lambda: self.adjust_by_bar(self.ui.label_main))
+        self.ui.cbox_res.currentIndexChanged.connect(self.update_small_img)
         self.ui.button_run.clicked.connect(self.run_and_save)
-        print("connected")
         self.display_image(self.ui.label_main, img)
         #self.display_image(self.ui.label_prev, img_small)
 
     def update_small_img(self):
+        if self.handle_img is None:
+            return
         src = self.handle_img
-        times = int(self.ui.cbox_res.currentText()[0])
+        times = int(self.ui.cbox_res.currentText()[:-1])
+        print(f"small img updated for:{times}")
         height, width, _ = src.shape
         self.small_img = cv2.resize(src, (width // times, height // times))
         self.display_image(self.ui.label_prev, self.small_img)
@@ -82,7 +86,8 @@ class main_window:
         #         print("!!!logic error!!!")
         # 只有当label为main的时候才有可能是保存的选项
         # 可能会造成一直变量的情况
-        self.ca.update(False)
+        self.ca.small_src = img
+        self.ca.update(True, False)
     def open_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self.ui, "Open file", "", "Images (*.png *.xpm *.jpg)")
         if file_name:
@@ -90,7 +95,6 @@ class main_window:
     
     def display_image(self, label, img):
         label.clear()
-        print("111")
         try:
             height, width, _ = img.shape
             bytesPerLine = 3 * width
@@ -103,7 +107,6 @@ class main_window:
             label.setPixmap(img)
 
     def run_and_save(self, save_to = None):
-        print("222")
         if self.handle_img is None:
             self.open_file()
 
@@ -114,10 +117,19 @@ class main_window:
         elif self.ui.cbox_function.currentText() == "调整饱和度":
             value = self.ui.slider_right.value()
             img = cv_funcs.Saturation(img, value)
-
-        img = self.ca.update(wanna_return = True)
+        elif self.ui.cbox_function.currentText() == "调整曲线":
+            img = self.ca.update(is_prev = False, wanna_return = True)
+        else:
+            return
+        self.handle_img = img
+        self.ca.src = img
+        self.update_small_img()
         self.display_image(self.ui.label_main, img)
+        self.ui.slider_right.setValue(0)
 
+    def update_and_adjust(self):
+        self.update_small_img()
+        self.adjust_by_bar(self.ui.label_prev)
 
 
 if __name__ == '__main__':
