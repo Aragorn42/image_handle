@@ -28,8 +28,9 @@ class Curves:
             temp_img = self.C.adjust(self.src)# 区别之处
             self.mainwindow.display_image(self.label2, temp_img)
 
-        self.mainwindow.display_image(self.label3, cv_funcs.display_histogram(self.label3, chan, temp_img))
+        self.mainwindow.display_image(self.label3, self.mainwindow.funcs.display_histogram(self.label3, chan, temp_img))
         if wanna_return:
+            print(type(self.C.get_points()))
             return temp_img
     def chan_cho(self, s):
         if s == "R":

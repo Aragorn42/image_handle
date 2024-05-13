@@ -13,6 +13,7 @@ class main_window:
     handle_img = None
     small_img = None
     def __init__(self):
+        self.funcs = cv_funcs.Funcs()
         self.ui = uiLoader.load("main.ui")
         self.prepare()
         self.ui.show()
@@ -27,7 +28,6 @@ class main_window:
 
 
     def prepare_after_load_img(self, file_name):
-        print("again again")
         img = cv2.imread(file_name)
         height, width, _ = img.shape
         self.handle_img = img
@@ -65,16 +65,16 @@ class main_window:
             
         if self.ui.cbox_function.currentText() == "调整亮度":
             value = self.ui.slider_right.value()
-            img = cv_funcs.brightness_change(value, img)
+            img = self.funcs.brightness_change(value, img)
             self.display_image(label, img)
             
         elif self.ui.cbox_function.currentText() == "调整饱和度":
             value = self.ui.slider_right.value()
-            img = cv_funcs.Saturation(img, value)
+            img = self.funcs.Saturation(img, value)
             self.display_image(label, img)
         elif self.ui.cbox_function.currentText() == "调整曲线":
             pass
-        #self.display_image(self.ui.label_hist, cv_funcs.display_histogram( \
+        #self.display_image(self.ui.label_hist, self.funcs.display_histogram( \
         #    self.ui.label_hist, self.ui.cbox_curv_channel.currentText(), img))
         # 不会改变
         # if save:
@@ -113,10 +113,10 @@ class main_window:
         img = self.handle_img
         if self.ui.cbox_function.currentText() == "调整亮度":
             value = self.ui.slider_right.value()
-            img = cv_funcs.brightness_change(value, img)
+            img = self.funcs.brightness_change(value, img)
         elif self.ui.cbox_function.currentText() == "调整饱和度":
             value = self.ui.slider_right.value()
-            img = cv_funcs.Saturation(img, value)
+            img = self.funcs.Saturation(img, value)
         elif self.ui.cbox_function.currentText() == "调整曲线":
             img = self.ca.update(is_prev = False, wanna_return = True)
         else:
