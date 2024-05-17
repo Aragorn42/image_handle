@@ -1,8 +1,10 @@
 *.png
 *.spec
 output.txt
-\build
-\dist
-\__pycache__
+build
+dist
+__pycache__
 tempCodeRunnerFile.py
-\.idea
+.idea
+.vscode
+include/**/pybind11
