@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,12,3">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,10">
+     <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0,0,0,0,0,0,0,0,10">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
@@ -60,6 +60,16 @@
       </item>
       <item>
        <widget class="QComboBox" name="cbox_curv_channel"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>预设风格</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbox_style"/>
       </item>
       <item>
        <widget class="Line" name="line_2">

@@ -8,3 +8,4 @@ tempCodeRunnerFile.py
 .idea
 .vscode
 include/**/pybind11
+.vs

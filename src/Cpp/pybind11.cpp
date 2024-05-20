@@ -17,5 +17,6 @@ PYBIND11_MODULE(curves, m) {
         .def("mouseMove", &cv::Curves::mouseMove)
         .def("mouseUp", &cv::Curves::mouseUp)
         .def("channel_chose", &cv::Curves::channel_chose)
-        .def("get_points", &cv::Curves::get_points);
+        .def("get_points", &cv::Curves::get_points)
+        .def("set_points", &cv::Curves::set_points);
 }

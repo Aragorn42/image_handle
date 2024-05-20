@@ -469,13 +469,21 @@ namespace cv {
         }
         return output;
     }
+
     vector<Point> Curves::get_points() {
         vector<Point> points;
-        points = CurrentChannel->points;
+        std::copy(CurrentChannel->points.begin(), CurrentChannel->points.end(), std::back_inserter(points));
         return points;
     }
 
-    
+    void Curves::set_points(std::vector<Point>& pointsRGB, std::vector<Point>& pointsR, std::vector<Point>& pointsG, std::vector<Point>& pointsB) {
+        RGBChannel.points = pointsRGB;
+        RedChannel.points = pointsR;
+        GreenChannel.points = pointsG;
+        BlueChannel.points = pointsB;
+        return;
+	}
+
     void Curves::channel_chose(int channel){
         switch(channel) {
         case 3:

@@ -86,7 +86,11 @@ int main()
 	namedWindow(curves_window);
 	setMouseCallback(curves_window, callbackMouseEvent, NULL);
 	createTrackbar("Channel", curves_window, &channel,  3, callbackAdjustChannel);
-
+	
+	std::vector<Point> P;
+	P = curves.get_points();
+	std::cout << "points size: " << P.size() << std::endl;
+	curves.set_points(P, P, P, P);
 
 	invalidate();
 

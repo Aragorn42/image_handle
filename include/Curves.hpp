@@ -5,11 +5,11 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/highgui.hpp"
 #include <iostream>
-
+#include <algorithm>
 namespace cv {
 
 class Curve {
-protected:
+public:
 	Scalar color;
 	Scalar back_color;
 	int tolerance; //鼠标按下或移动时，捕获曲线点的误差范围
@@ -20,7 +20,6 @@ protected:
 	std::vector<Point>::iterator  find(int x, int y);
 	std::vector<Point>::iterator  add(int x, int y);
 
-public:
 	Curve();
 	virtual ~Curve();
 	std::vector<Point> points;  //control points 曲线的所有控制点
@@ -58,7 +57,8 @@ public:
 	bool mouseMove(int x, int y); //当鼠标移动，请调用mouseMove()方法
 	void mouseUp(int x, int y); //当鼠标抬起，请调用mouseUp()方法
     void channel_chose(int channel);
-	std::vector<Point> get_points();  
+	std::vector<Point> get_points();
+	void set_points(std::vector<Point>& pointsRGB, std::vector<Point>& pointsR, std::vector<Point>& pointsG, std::vector<Point>& pointsB);
 	//实施曲线调整
 	Mat adjust(Mat src);
 

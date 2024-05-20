@@ -29,6 +29,11 @@ class Curves:
             self.mainwindow.display_image(self.label2, temp_img)
 
         self.mainwindow.display_image(self.label3, self.mainwindow.funcs.display_histogram(self.label3, chan, temp_img))
+        P = self.get_points()
+        #print(type(P), type(P[0]), type(P[0][0]))
+        print(P)
+        self.set_points(P)
+              
         if wanna_return:
             print(type(self.C.get_points()))
             return temp_img
@@ -42,6 +47,10 @@ class Curves:
         else:
             self.C.channel_chose(4)
         
+    def get_points(self):
+        return self.C.get_points();
+    def set_points(self, points):
+        self.C.set_points(points, points, points, points);
     def callbackMouseEvent(self, mouseEvent, pos):
         if self.mainwindow.ui.cbox_function.currentText() == "调整曲线":
             if mouseEvent == "press":

@@ -1,6 +1,5 @@
 ﻿# CMakeList.txt: cmake_test 的 CMake 项目，在此处包括源代码并定义
 # 项目特定的逻辑。
-#
 cmake_minimum_required (VERSION 3.8)
 
 if (POLICY CMP0141) # 
@@ -13,7 +12,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})  
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 if (OFF)
-    add_executable (cmake_test demo.cpp Curves.cpp)
+    add_executable (cmake_test tests/demo.cpp src/Cpp/Curves.cpp)
     target_link_libraries(cmake_test PRIVATE ${OpenCV_LIBS})
 else()
     add_subdirectory(include/pybind11)
