@@ -1,8 +1,8 @@
-import curves as curves
+import sys, os
+os.chdir(os.path.dirname(__file__))
+sys.path.append('../../include')
+import curves as curves # type: ignore
 import numpy as np
-import cv_funcs
-from PySide6.QtGui import QPixmap, QColor, QPainter
-
 
 class Curves:
     def __init__(self, mainwindow, src, small_src, label1, label2, label3, label4):
