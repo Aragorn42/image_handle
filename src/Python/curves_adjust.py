@@ -22,20 +22,17 @@ class Curves:
         self.C.draw(self.curves_mat)
         self.mainwindow.display_image(self.label1, self.curves_mat)  # 通用
         if is_prev:
+            self.small_src = self.mainwindow.small_img
             temp_img = self.C.adjust(self.small_src)  # 区别之处
             self.mainwindow.display_image(self.label4, temp_img)
         else:
-            temp_img = self.C.adjust(self.src)# 区别之处
+            temp_img = self.C.adjust(self.src)
             self.mainwindow.display_image(self.label2, temp_img)
 
         self.mainwindow.display_image(self.label3, self.mainwindow.funcs.display_histogram(self.label3, chan, temp_img))
         P = self.get_points()
-        #print(type(P), type(P[0]), type(P[0][0]))
         print(P)
-        self.set_points(P)
-              
         if wanna_return:
-            print(type(self.C.get_points()))
             return temp_img
     def chan_cho(self, s):
         if s == "R":
@@ -48,9 +45,10 @@ class Curves:
             self.C.channel_chose(4)
         
     def get_points(self):
-        return self.C.get_points();
-    def set_points(self, points):
-        self.C.set_points(points, points, points, points);
+        return self.C.get_points()
+    def set_points(self, pointsRGB = [(0, 0), (255, 255)], pointsR = [(0, 0), (255, 255)], pointsG = [(0, 0), (255, 255)], pointsB = [(0, 0), (255, 255)]):
+        self.C.set_points(pointsRGB, pointsR, pointsG, pointsB)
+        self.update()
     def callbackMouseEvent(self, mouseEvent, pos):
         if self.mainwindow.ui.cbox_function.currentText() == "调整曲线":
             if mouseEvent == "press":
