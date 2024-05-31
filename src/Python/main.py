@@ -19,7 +19,7 @@ class main_window:
         self.ui.show()
          
     def prepare(self):
-        self.ca = None # 先占位, 还没有导入图片
+        #self.ca = None # 先占位, 还没有导入图片
         self.ui.actionNewFile.triggered.connect(self.open_file)
         self.ui.cbox_prev_channel.addItems(["RGB", "R", "G", "B"])
         self.ui.cbox_curv_channel.addItems(["RGB", "R", "G", "B"])
@@ -31,11 +31,10 @@ class main_window:
         img = cv2.imread(file_name)
         self.handle_img = img
         self.update_small_img()
-        self.ca = curves_adjust.Curves(self, self.handle_img, self.small_img, self.ui.label_curv,\
-                                       self.ui.label_main, self.ui.label_hist, self.ui.label_prev)
-        self.ui.label_curv.setCurve(self.ca, self)
+        self.ca = curves_adjust.Curves(self) # 将当前类传进去在其中被调用
+        self.ui.label_curv.setCurve(self.ca, self) # C++代码中的函数
         self.ca.update()
-        self.ui.cbox_curv_channel.currentIndexChanged.connect(lambda: self.ca.update())
+        self.ui.cbox_curv_channel.currentIndexChanged.connect(self.ca.update)
         self.ui.slider_right.valueChanged.connect(lambda: self.adjust(self.ui.label_prev))
         self.ui.cbox_function.currentIndexChanged.connect(lambda: self.adjust(self.ui.label_main))
         self.ui.cbox_res.currentIndexChanged.connect(self.update_small_img)
@@ -77,8 +76,8 @@ class main_window:
         elif self.ui.cbox_function.currentText() == "调整曲线":
             pass
         #self.small_img = img
-        self.ca.small_src = img
-        self.ca.update(True, False)
+        #self.ca.update(True, False)
+        self.ca.update_curve(img)
         # updata里面的small_src每次都更新成了small_img所以不显示
     def open_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self.ui, "Open file", "", "Images (*.png *.xpm *.jpg)")
@@ -115,7 +114,6 @@ class main_window:
         else:
             return
         self.handle_img = img
-        self.ca.src = img
         self.update_small_img()
         self.display_image(self.ui.label_main, img)
         self.ui.slider_right.setValue(0)
