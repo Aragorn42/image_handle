@@ -22,9 +22,9 @@ class Curves:
         self.C.draw(self.curves_mat)
         self.mainwindow.display_image(self.label1, self.curves_mat)  # 通用
         if is_prev:
-            self.small_src = self.mainwindow.small_img
+            #self.small_src = self.mainwindow.small_img
             temp_img = self.C.adjust(self.small_src)  # 区别之处
-            self.mainwindow.display_image(self.label4, temp_img)
+            self.mainwindow.display_single_channel(temp_img)
         else:
             temp_img = self.C.adjust(self.src)
             self.mainwindow.display_image(self.label2, temp_img)

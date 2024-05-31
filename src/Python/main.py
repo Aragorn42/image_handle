@@ -23,7 +23,7 @@ class main_window:
         self.ui.actionNewFile.triggered.connect(self.open_file)
         self.ui.cbox_prev_channel.addItems(["RGB", "R", "G", "B"])
         self.ui.cbox_curv_channel.addItems(["RGB", "R", "G", "B"])
-        self.ui.cbox_res.addItems(["1x", "4x", "8x", "16x"])
+        self.ui.cbox_res.addItems(["4x", "8x", "16x"])
         self.ui.cbox_function.addItems(["调整亮度", "调整饱和度", "调整曲线"])
         self.ui.cbox_style.addItems(["无", "Cyper Punk"])
         
@@ -40,7 +40,7 @@ class main_window:
         self.ui.cbox_function.currentIndexChanged.connect(lambda: self.adjust(self.ui.label_main))
         self.ui.cbox_res.currentIndexChanged.connect(self.update_small_img)
         self.ui.button_run.clicked.connect(self.run_and_save)
-        self.ui.cbox_prev_channel.currentIndexChanged.connect(self.display_single_channel)
+        self.ui.cbox_prev_channel.currentIndexChanged.connect(lambda: self.display_single_channel(self.small_img))
         self.display_image(self.ui.label_main, img)
         self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSave_As.triggered.connect(self.save_as)
@@ -76,9 +76,10 @@ class main_window:
             self.display_image(label, img)
         elif self.ui.cbox_function.currentText() == "调整曲线":
             pass
+        #self.small_img = img
         self.ca.small_src = img
         self.ca.update(True, False)
-        
+        # updata里面的small_src每次都更新成了small_img所以不显示
     def open_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self.ui, "Open file", "", "Images (*.png *.xpm *.jpg)")
         self.last_saved_file = file_name
@@ -136,9 +137,9 @@ class main_window:
         self.update_small_img()
         self.adjust(self.ui.label_prev)
    
-    def display_single_channel(self):
+    def display_single_channel(self, img):
+        print(1)
         # NEXT bug 可能需要改掉所有的label为label_prev的self.display的调用
-        img = self.small_img
         temp_color = self.ui.cbox_prev_channel.currentText()
         temp_img = np.zeros_like(img)
         if temp_color == "RGB":
