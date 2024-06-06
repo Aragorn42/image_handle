@@ -2,6 +2,7 @@ import cv2
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap, QColor, QPainter
 from datetime import datetime
+from math import fabs, sin, cos, radians
 import os
 
 
@@ -56,6 +57,28 @@ class Funcs:
         painter.end()
         return pixmap
     # 在label中显示直方图
+    
+    def rotate_image(img, angle):
+        h, w = img.shape[:2]
+        center = (w / 2, h / 2)
+        scale = 1.0
+        # 2.1获取M矩阵
+        """
+        M矩阵
+        [
+        cosA -sinA (1-cosA)*centerX+sinA*centerY
+        sinA cosA  -sinA*centerX+(1-cosA)*centerY
+        ]
+        """
+        M = cv2.getRotationMatrix2D(center, angle, scale)
+        # 2.2 新的宽高，radians(angle) 把角度转为弧度 sin(弧度)
+        new_H = int(w * fabs(sin(radians(angle))) + h * fabs(cos(radians(angle))))
+        new_W = int(h * fabs(sin(radians(angle))) + w * fabs(cos(radians(angle))))
+        # 2.3 平移
+        M[0, 2] += (new_W - w) / 2
+        M[1, 2] += (new_H - h) / 2
+        rotate = cv2.warpAffine(img, M, (new_W, new_H), borderValue=(0, 0, 0))
+        return rotate
 
     def display_image_info(self, label, file_name, img):
         height, width, _ = img.shape

@@ -81,7 +81,7 @@
      </layout>
     </item>
     <item>
-     <widget class="PaintLabel" name="label_main">
+     <widget class="QLabel" name="label_main">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(165, 165, 165);</string>
       </property>
@@ -162,6 +162,9 @@
      <string>编辑</string>
     </property>
     <addaction name="actionundo"/>
+    <addaction name="actionredo"/>
+    <addaction name="action_turnleft"/>
+    <addaction name="action_turnright"/>
    </widget>
    <widget class="QMenu" name="menuINFO">
     <property name="title">
@@ -208,17 +211,33 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
+  <action name="actionredo">
+   <property name="text">
+    <string>redo</string>
+   </property>
+  </action>
+  <action name="action_turnleft">
+   <property name="text">
+    <string>turn left</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="action_turnright">
+   <property name="text">
+    <string>turn right</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>MyLabel</class>
    <extends>QLabel</extends>
    <header>MyWidget.MyLabel</header>
-  </customwidget>
-  <customwidget>
-   <class>PaintLabel</class>
-   <extends>QLabel</extends>
-   <header>MyWidget.PaintLabel</header>
   </customwidget>
  </customwidgets>
  <resources/>

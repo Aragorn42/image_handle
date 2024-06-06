@@ -25,6 +25,8 @@ class main_window:
         self.ui.cbox_res.addItems(["4x", "8x", "16x"])
         self.ui.cbox_function.addItems(["调整亮度", "调整饱和度", "调整曲线", "draw"])
         self.ui.cbox_style.addItems(["无", "Cyper Punk"])
+        self.ui.action_turnleft.triggered.connect(lambda: self.main_rotate_image(-90))
+        self.ui.action_turnright.triggered.connect(lambda: self.main_rotate_image(90))
         
     def prepare_after_load_img(self, file_name):
         img = cv2.imread(file_name)
@@ -84,17 +86,16 @@ class main_window:
             self.prepare_after_load_img(file_name)
     
     def display_image(self, label, img):
-        # NEXT 改掉try except
-        try:
-            height, width, _ = img.shape
-            bytesPerLine = 3 * width
-            qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-            pixmap = QPixmap.fromImage(qImg)
-            pixmap = pixmap.scaled(label.width(), label.height(),\
-                                   Qt.KeepAspectRatio, Qt.SmoothTransformation)
-            label.setPixmap(pixmap)
-        except:
+        if isinstance(img, QPixmap):
             label.setPixmap(img)
+            return
+        height, width, _ = img.shape
+        bytesPerLine = 3 * width
+        qImg = QImage(img.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
+        pixmap = QPixmap.fromImage(qImg)
+        pixmap = pixmap.scaled(label.width(), label.height(),\
+                                Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        label.setPixmap(pixmap)
 
     def run_and_save(self):
         if self.handle_img is None:
@@ -155,7 +156,19 @@ class main_window:
             self.ca.set_points([(0, 0), (46, 73), (53, 54), (76, 142), (121, 149), (204, 129), (255, 255)])
         else:
             self.ca.set_points()
-
+            
+    def main_rotate_image(self, rotation):
+        if rotation == 90:
+            self.handle_img = cv_funcs.Funcs.rotate_image(self.handle_img, 90)
+            self.small_img = cv_funcs.Funcs.rotate_image(self.small_img, 90)
+        elif rotation == -90:
+            self.handle_img = cv_funcs.Funcs.rotate_image(self.handle_img, -90)
+            self.small_img = cv_funcs.Funcs.rotate_image(self.small_img, -90)
+        else:
+            print("Error: turn angle is not 90 or -90")
+        self.display_image(self.ui.label_main, self.handle_img)
+        self.display_image(self.ui.label_prev, self.small_img)
+        
 if __name__ == '__main__':
     app = QApplication([])
     window = main_window()
