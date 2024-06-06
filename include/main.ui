@@ -81,7 +81,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QLabel" name="label_main">
+     <widget class="PaintLabel" name="label_main">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(165, 165, 165);</string>
       </property>
@@ -214,6 +214,11 @@
    <class>MyLabel</class>
    <extends>QLabel</extends>
    <header>MyWidget.MyLabel</header>
+  </customwidget>
+  <customwidget>
+   <class>PaintLabel</class>
+   <extends>QLabel</extends>
+   <header>MyWidget.PaintLabel</header>
   </customwidget>
  </customwidgets>
  <resources/>

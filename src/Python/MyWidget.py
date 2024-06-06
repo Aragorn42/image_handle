@@ -1,6 +1,11 @@
 from PySide6.QtWidgets import QLabel
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QLabel
+from PySide6.QtGui import QImage, QPainter, QPen
+from PySide6.QtCore import Qt, QPoint
+from PySide6.QtGui import QColor, QPixmap
+
 
 class MyLabel(QLabel):
     def __init__(self, parent=None):
@@ -24,6 +29,7 @@ class MyLabel(QLabel):
         y = int(pos.y() / label_size.height() * 255)
         return x, y
     
+        
 class MyUiLoader(QUiLoader):
     def createWidget(self, className, parent=None, name=''):
         if className == 'MyLabel':

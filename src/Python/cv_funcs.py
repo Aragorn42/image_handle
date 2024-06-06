@@ -8,11 +8,11 @@ import os
 class Funcs:
     def __init__(self):
         pass
-    def brightness_change(self, value, img):
+    def brightness_change(self, value, img): # 亮度调整
         img = cv2.convertScaleAbs(img, alpha=1, beta=value)
         return img
 
-    def Saturation(self, img, value):
+    def Saturation(self, img, value): # 对比度调整
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         hsv = hsv.astype('float32')
 
@@ -42,9 +42,9 @@ class Funcs:
             hist, color = None, None
             print("Invalid channel")
         return hist, color
-    # only in cv_funcs.display_histogram()
-
-    def display_histogram(self, label, chan, img): # only in Curves.update()
+    # 计算显示直方图需要的信息
+    
+    def display_histogram(self, label, chan, img):
         hist, color = self._calc_hist_(img, chan)
         pixmap = QPixmap(label.width(), label.height())
         pixmap.fill(QColor(223, 223, 223))
@@ -55,6 +55,7 @@ class Funcs:
             painter.drawLine(i, label.height(), i, label.height() - height)
         painter.end()
         return pixmap
+    # 在label中显示直方图
 
     def display_image_info(self, label, file_name, img):
         height, width, _ = img.shape
@@ -63,3 +64,4 @@ class Funcs:
         modified_time = datetime.fromtimestamp(os.path.getmtime(file_name)).strftime('%Y-%m-%d %H:%M:%S')
         info = f"Resolution: {width}x{height}\nSize: {size:.2f} KB\nType: {file_type}\nModified: {modified_time}"
         label.setText(info)
+    # 显示图片信息, 暂时没有用到
