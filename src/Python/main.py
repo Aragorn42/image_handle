@@ -1,5 +1,7 @@
 import cv2
+from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QApplication, QFileDialog
+from PySide6.QtGui import QUndoStack, QUndoCommand
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtCore import Qt
 import cv_funcs
@@ -17,7 +19,8 @@ class main_window:
         self.ui = uiLoader.load("../../include/main.ui")
         self.prepare()
         self.ui.show()
-         
+        self.undo_stack = QUndoStack()
+        
     def prepare(self):
         self.ui.actionNewFile.triggered.connect(self.open_file)
         self.ui.cbox_prev_channel.addItems(["RGB", "R", "G", "B"])
@@ -46,6 +49,9 @@ class main_window:
         self.ui.actionSave.triggered.connect(self.save)
         self.ui.actionSave_As.triggered.connect(self.save_as)
         self.ui.cbox_style.currentIndexChanged.connect(self.change_style)
+        self.undo_stack = QUndoStack()
+        self.ui.actionUndo.triggered.connect(self.undo_stack.undo)
+        self.ui.actionRedo.triggered.connect(self.undo_stack.redo)
         #self.display_image(self.ui.label_prev, img_small)
 
     def update_small_img(self):
@@ -59,12 +65,16 @@ class main_window:
         self.display_image(self.ui.label_prev, self.small_img)
         
     def adjust(self, label):
+        pre_img = None
+        pre_Bar = None
         if self.handle_img is None:
             self.open_file()
         if label == self.ui.label_main:
             img = self.handle_img
         else:
             img = self.small_img
+            pre_img = self.small_img
+            pre_Bar = self.ui.slider_right.value()
             
         if self.ui.cbox_function.currentText() == "调整亮度":
             value = self.ui.slider_right.value()
@@ -78,7 +88,10 @@ class main_window:
         elif self.ui.cbox_function.currentText() == "调整曲线":
             pass
         self.ca.update_curve(img)
-        
+        if label == self.ui.label_prev:
+            self.undo_stack.push(MyWidget.AdjustCommand(self, pre_img, img,\
+                pre_Bar = pre_Bar, cur_Bar = self.ui.slider_right.value()))
+            
     def open_file(self):
         file_name, _ = QFileDialog.getOpenFileName(self.ui, "Open file", "", "Images (*.png *.xpm *.jpg)")
         self.last_saved_file = file_name
@@ -116,6 +129,7 @@ class main_window:
         self.update_small_img()
         self.display_image(self.ui.label_main, img)
         self.ui.slider_right.setValue(0)
+        self.undo_stack.clear() # 每次保存清空栈
         self.ca.set_points()
 
     def save(self):

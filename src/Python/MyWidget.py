@@ -5,7 +5,7 @@ from PySide6.QtWidgets import QLabel
 from PySide6.QtGui import QImage, QPainter, QPen
 from PySide6.QtCore import Qt, QPoint
 from PySide6.QtGui import QColor, QPixmap
-
+from PySide6.QtGui import QUndoStack, QUndoCommand
 
 class MyLabel(QLabel):
     def __init__(self, parent=None):
@@ -28,8 +28,39 @@ class MyLabel(QLabel):
         x = int(pos.x() / label_size.width() * 255)
         y = int(pos.y() / label_size.height() * 255)
         return x, y
-    
-        
+
+
+class AdjustCommand(QUndoCommand):
+    def __init__(self, main, previous_img, current_img, \
+        pre_P=None, cur_P=None, pre_Bar = None, cur_Bar = None):
+        super().__init__()
+        self.main = main
+        self.previous_img = previous_img
+        self.current_img = current_img
+        self.pre_P = pre_P
+        self.cur_P = cur_P
+        self.pre_Bar = pre_Bar
+        self.cur_Bar = cur_Bar
+
+    def undo(self):
+        self.main.small_img = self.previous_img
+        self.main.display_image(self.main.ui.label_prev, self.previous_img)
+        self.main.ca.update_curve(self.previous_img)
+        if self.pre_P:
+            self.main.ca.set_points(self.pre_P)
+        if self.pre_Bar:
+            self.main.ui.slider_right.setValue(self.pre_Bar)
+            
+    def redo(self):
+        self.main.small_img = self.current_img
+        self.main.display_image(self.main.ui.label_prev, self.current_img)
+        self.main.ca.update_curve(self.current_img)
+        if self.cur_P:
+            self.main.ca.set_points(self.cur_P)
+        if self.cur_Bar:
+            self.main.ui.slider_right.setValue(self.cur_Bar)
+    # 每次undo之后, 如果栈没有加入新的元素, 则可以redo, 否则不行
+      
 class MyUiLoader(QUiLoader):
     def createWidget(self, className, parent=None, name=''):
         if className == 'MyLabel':

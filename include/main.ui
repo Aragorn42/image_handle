@@ -161,8 +161,8 @@
     <property name="title">
      <string>编辑</string>
     </property>
-    <addaction name="actionundo"/>
-    <addaction name="actionredo"/>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
     <addaction name="action_turnleft"/>
     <addaction name="action_turnright"/>
    </widget>
@@ -185,14 +185,20 @@
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="actionundo">
+  <action name="actionUndo">
    <property name="text">
     <string>undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
    </property>
   </action>
   <action name="actionabout">
    <property name="text">
     <string>about</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionSave">
@@ -211,9 +217,12 @@
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="actionredo">
+  <action name="actionRedo">
    <property name="text">
     <string>redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="action_turnleft">
