@@ -136,7 +136,7 @@ class main_window:
         self.adjust(self.ui.label_prev)
    
     def display_single_channel(self, img):
-        print(1)
+        #print(1)
         # NEXT bug 可能需要改掉所有的label为label_prev的self.display的调用
         temp_color = self.ui.cbox_prev_channel.currentText()
         temp_img = np.zeros_like(img)
