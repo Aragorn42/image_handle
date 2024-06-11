@@ -170,7 +170,8 @@
     <property name="title">
      <string>关于</string>
     </property>
-    <addaction name="actionabout"/>
+    <addaction name="action_about"/>
+    <addaction name="action_imginfo"/>
    </widget>
    <addaction name="menuFILE"/>
    <addaction name="menuEDIT"/>
@@ -193,12 +194,12 @@
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="actionabout">
+  <action name="action_about">
    <property name="text">
     <string>about</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+I</string>
+    <string>Ctrl+A</string>
    </property>
   </action>
   <action name="actionSave">
@@ -239,6 +240,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_imginfo">
+   <property name="text">
+    <string>image infomation</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
  </widget>

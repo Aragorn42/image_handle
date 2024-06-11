@@ -1,7 +1,7 @@
 import sys, os
 os.chdir(os.path.dirname(__file__))
 sys.path.append('../../include')
-import curves as curves # type: ignore
+import curves as curves
 import numpy as np
 import MyWidget
 class Curves:
@@ -11,7 +11,7 @@ class Curves:
         self.main = main
         
     def update(self, is_prev=True, wanna_return = False, wanna_store = True):
-        #print("update")
+        # wanna_store表示是否想把当前操作加入undo_stack
         chan = self.main.ui.cbox_curv_channel.currentText()
         pre_img = None
         pre_P = None
@@ -31,13 +31,13 @@ class Curves:
 
         self.main.display_image(self.main.ui.label_hist, self.main.funcs.display_histogram(self.main.ui.label_hist, chan, temp_img))
         if is_prev and wanna_store:   
-            self.main.undo_stack.push(MyWidget.AdjustCommand(self.main, pre_img, temp_img,\
-                pre_P = pre_P, cur_P = self.get_points()))
+            self.main.undo_stack.push(MyWidget.AdjustCommand(self.main, pre_img, temp_img,
+                                    pre_P = pre_P, cur_P = self.get_points()))
         if wanna_return:
             return temp_img
         
     def update_curve(self, img):
-        print("update_curve")
+        # 单独更新曲线
         chan = self.main.ui.cbox_curv_channel.currentText()
         self.chan_cho(chan)
         self.C.draw(self.curves_mat)
@@ -57,10 +57,13 @@ class Curves:
         
     def get_points(self):
         return self.C.get_points()
-    def set_points(self, pointsRGB = [(0, 0), (255, 255)], pointsR = [(0, 0), (255, 255)], pointsG = [(0, 0), (255, 255)], pointsB = [(0, 0), (255, 255)]):
+    
+    def set_points(self, pointsRGB = [(0, 0), (255, 255)], pointsR = [(0, 0), (255, 255)],\
+                   pointsG = [(0, 0), (255, 255)], pointsB = [(0, 0), (255, 255)]):
         self.C.set_points(pointsRGB, pointsR, pointsG, pointsB)
         #self.update()
         self.update(wanna_store=False) # 防止循环调用
+        
     def callbackMouseEvent(self, mouseEvent, pos):
         if self.main.ui.cbox_function.currentText() == "调整曲线":
             if mouseEvent == "press":

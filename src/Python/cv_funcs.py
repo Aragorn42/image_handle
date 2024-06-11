@@ -80,11 +80,11 @@ class Funcs:
         rotate = cv2.warpAffine(img, M, (new_W, new_H), borderValue=(0, 0, 0))
         return rotate
 
-    def display_image_info(self, label, file_name, img):
+    def display_image_info(file_name, img):
         height, width, _ = img.shape
         size = os.path.getsize(file_name) /(1024)
         file_type = os.path.splitext(file_name)[1]
         modified_time = datetime.fromtimestamp(os.path.getmtime(file_name)).strftime('%Y-%m-%d %H:%M:%S')
         info = f"Resolution: {width}x{height}\nSize: {size:.2f} KB\nType: {file_type}\nModified: {modified_time}"
-        label.setText(info)
+        return info
     # 显示图片信息, 暂时没有用到

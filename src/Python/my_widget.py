@@ -1,11 +1,7 @@
-from PySide6.QtWidgets import QLabel
+from PySide6.QtWidgets import QLabel, QWidget
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QLabel
-from PySide6.QtGui import QImage, QPainter, QPen
-from PySide6.QtCore import Qt, QPoint
-from PySide6.QtGui import QColor, QPixmap
-from PySide6.QtGui import QUndoStack, QUndoCommand
+from PySide6.QtGui import QUndoCommand
 
 class MyLabel(QLabel):
     def __init__(self, parent=None):
@@ -66,3 +62,7 @@ class MyUiLoader(QUiLoader):
         if className == 'MyLabel':
             return MyLabel(parent)
         return super().createWidget(className, parent, name)
+     
+class SubWindow(QWidget):
+    def __init__(self):
+        super().__init__()
