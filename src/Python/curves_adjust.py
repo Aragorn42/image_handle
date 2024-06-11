@@ -3,14 +3,15 @@ os.chdir(os.path.dirname(__file__))
 sys.path.append('../../include')
 import curves as curves
 import numpy as np
-import MyWidget
+import my_widget
 class Curves:
     def __init__(self, main):
         self.C = curves.Curves()
+        # curves库当中定义的类
         self.curves_mat = np.ones((256, 256, 3), dtype=np.uint8)
         self.main = main
         
-    def update(self, is_prev=True, wanna_return = False, wanna_store = True):
+    def update(self, is_prev=True, wanna_return = False, wanna_store = False):
         # wanna_store表示是否想把当前操作加入undo_stack
         chan = self.main.ui.cbox_curv_channel.currentText()
         pre_img = None
@@ -31,7 +32,7 @@ class Curves:
 
         self.main.display_image(self.main.ui.label_hist, self.main.funcs.display_histogram(self.main.ui.label_hist, chan, temp_img))
         if is_prev and wanna_store:   
-            self.main.undo_stack.push(MyWidget.AdjustCommand(self.main, pre_img, temp_img,
+            self.main.undo_stack.push(my_widget.AdjustCommand(self.main, pre_img, temp_img,
                                     pre_P = pre_P, cur_P = self.get_points()))
         if wanna_return:
             return temp_img

@@ -80,7 +80,7 @@ class Funcs:
         rotate = cv2.warpAffine(img, M, (new_W, new_H), borderValue=(0, 0, 0))
         return rotate
 
-    def display_image_info(file_name, img):
+    def display_image_info(self, file_name, img):
         height, width, _ = img.shape
         size = os.path.getsize(file_name) /(1024)
         file_type = os.path.splitext(file_name)[1]

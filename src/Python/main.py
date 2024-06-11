@@ -4,10 +4,9 @@ from PySide6.QtGui import QUndoStack,  QImage, QPixmap, QIcon
 from PySide6.QtCore import Qt
 import cv_funcs
 import curves_adjust
-import MyWidget
+import my_widget
 import numpy as np
 
-uiLoader = MyWidget.MyUiLoader()
 
 class MainWindow():
     handle_img = None # 主窗口中显示的图片
@@ -51,7 +50,7 @@ class MainWindow():
         self.ca = curves_adjust.Curves(self) 
         # 将当前类传进去在其中被调用, 曲线调整类
         self.ui.label_curv.setCurve(self.ca, self) 
-        # MyWidget当中的函数, 把ca类传递进去调用
+        # my_widget当中的函数, 把ca类传递进去调用
         self.ca.update_curve(self.handle_img)
         # 显示曲线
         self.ui.cbox_curv_channel.currentIndexChanged.connect(self.ca.update)
@@ -76,6 +75,7 @@ class MainWindow():
 
     def update_small_img(self):
         # 按照选择的缩放倍率, 更新预览窗口的图片
+        # 只更新缩放, 不更新色彩
         if self.handle_img is None:
             return
         src = self.handle_img
@@ -85,7 +85,7 @@ class MainWindow():
         self.small_img = cv2.resize(src, (width // times, height // times))
         self.display_image(self.ui.label_prev, self.small_img)
         
-    def adjust(self, label):
+    def adjust(self, label, wanna_store = True):
         # 调整亮度和饱和度, 但是选项有3个, 第三个功能的调整因为绑定了鼠标动作, 所以单独处理
         # 其余两个调用cv_funcs.Funcs类中的函数
         pre_img = None
@@ -96,8 +96,9 @@ class MainWindow():
             img = self.handle_img
         else:
             img = self.small_img
-            pre_img = self.small_img
-            pre_Bar = self.ui.slider_right.value()
+            if wanna_store:    
+                pre_img = self.small_img
+                pre_Bar = self.ui.slider_right.value()
             
         if self.ui.cbox_function.currentText() == "调整亮度":
             value = self.ui.slider_right.value()
@@ -112,8 +113,8 @@ class MainWindow():
             pass
 
         self.ca.update_curve(img) # 使得曲线和图片同步
-        if label == self.ui.label_prev:
-            self.undo_stack.push(MyWidget.AdjustCommand(self, pre_img, img,\
+        if wanna_store and label == self.ui.label_prev:
+            self.undo_stack.push(my_widget.AdjustCommand(self, pre_img, img,\
                 pre_Bar = pre_Bar, cur_Bar = self.ui.slider_right.value()))
         # 如果是预览窗口, 则加入undo_stack
 
@@ -187,6 +188,7 @@ class MainWindow():
         # 在预览窗口显示某一通道的图片
         temp_color = self.ui.cbox_prev_channel.currentText()
         temp_img = np.zeros_like(img)
+        # 选择R, G, B或原来颜色的情况
         if temp_color == "RGB":
             self.display_image(self.ui.label_prev, img)
         elif temp_color == "B":
@@ -208,6 +210,8 @@ class MainWindow():
             self.ca.set_points()
             
     def main_rotate_image(self, rotation):
+        # 旋转图片, 旋转之后更新预览窗口和主窗口
+        # 只有旋转90度和-90度两种情况
         if rotation == 90:
             self.handle_img = cv_funcs.Funcs.rotate_image(self.handle_img, 90)
             self.small_img = cv_funcs.Funcs.rotate_image(self.small_img, 90)
@@ -220,11 +224,12 @@ class MainWindow():
         self.display_image(self.ui.label_prev, self.small_img)
         
     def infomation(self, type):
+        # 软件信息和图片信息, 在子窗口里面显示
         if type == "about":
-            QMessageBox.about(SubWindow(), "About:", "This is a simple image processing software\nhttps://github.com/Aragorn42/image_handle")
+            QMessageBox.about(my_widget.SubWindow(), "About:", "This is a simple image processing software\nhttps://github.com/Aragorn42/image_handle")
         elif type == "info":
-            QMessageBox.about(SubWindow(), "Image Infomation", \
-                cv_funcs.Funcs.display_image_info(self.last_saved_file, self.handle_img))
+            QMessageBox.about(my_widget.SubWindow(), "Image Infomation", \
+                cv_funcs.Funcs.display_image_info(None, self.last_saved_file, self.handle_img))
 
 class SubWindow(QWidget):
     def __init__(self):
@@ -232,6 +237,7 @@ class SubWindow(QWidget):
 
 
 if __name__ == '__main__':
+    uiLoader = my_widget.MyUiLoader()
     app = QApplication([])
     window = MainWindow()
     window.ui.showMaximized()
