@@ -16,7 +16,6 @@ class Funcs:
     def Saturation(self, img, value): # 对比度调整
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         hsv = hsv.astype('float32')
-
         # Adjust the saturation
         hsv[..., 1] = hsv[..., 1] * (1 + value / 255.0)
         hsv[..., 1][hsv[..., 1] > 255] = 255

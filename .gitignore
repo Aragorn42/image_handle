@@ -9,3 +9,6 @@ tempCodeRunnerFile.py
 .vscode
 include/**/pybind11
 .vs
+MainWindow.uml
+src/Python/.$curves_adjust.drawio.bkp
+src/Python/curves_adjust.drawio

@@ -6,18 +6,20 @@ import cv_funcs
 import curves_adjust
 import my_widget
 import numpy as np
+import inspect
 
 
 class MainWindow():
     handle_img = None # 主窗口中显示的图片
     small_img = None # 预览窗口显示的图片
+    temp_img = None # 颜色处理的基础, 在每次确定的时候, 会被更新为small_img
     def __init__(self):
         self.funcs = cv_funcs.Funcs()
         self.ui = uiLoader.load("../../include/main.ui")
         self.undo_stack = QUndoStack()
         self.prepare()
         self.ui.show()
-        
+
     def prepare(self):
         # __init__中的一些准备工作, 为了代码整洁单独提出来
         self.ui.actionNewFile.triggered.connect(self.open_file)
@@ -83,6 +85,8 @@ class MainWindow():
         #print(f"small img updated for:{times}")
         height, width, _ = src.shape
         self.small_img = cv2.resize(src, (width // times, height // times))
+        self.temp_img = self.small_img.copy()
+        # 显示的时候依然显示small_img, 但是在处理的时候以temp_img为基准
         self.display_image(self.ui.label_prev, self.small_img)
         
     def adjust(self, label, wanna_store = True):
@@ -95,9 +99,9 @@ class MainWindow():
         if label == self.ui.label_main:
             img = self.handle_img
         else:
-            img = self.small_img
+            img = self.temp_img
             if wanna_store:    
-                pre_img = self.small_img
+                pre_img = self.small_img.copy()
                 pre_Bar = self.ui.slider_right.value()
             
         if self.ui.cbox_function.currentText() == "调整亮度":
@@ -116,6 +120,7 @@ class MainWindow():
         if wanna_store and label == self.ui.label_prev:
             self.undo_stack.push(my_widget.AdjustCommand(self, pre_img, img,\
                 pre_Bar = pre_Bar, cur_Bar = self.ui.slider_right.value()))
+        # important: 每次push一个command进入stack当中, 会自动调用其中的redo()函数
         # 如果是预览窗口, 则加入undo_stack
 
     def open_file(self):
@@ -222,6 +227,7 @@ class MainWindow():
             print("Error: turn angle is not 90 or -90")
         self.display_image(self.ui.label_main, self.handle_img)
         self.display_image(self.ui.label_prev, self.small_img)
+        self.run_and_save()
         
     def infomation(self, type):
         # 软件信息和图片信息, 在子窗口里面显示
