@@ -11,10 +11,10 @@ class Curves:
         self.curves_mat = np.ones((256, 256, 3), dtype=np.uint8)
         self.main = main
         
-    def update(self, is_prev=True, wanna_return = False):
+    def update(self, is_prev=True, wanna_return = False, wanna_store = True):
         # wanna_store表示是否想把当前操作加入undo_stack
         chan = self.main.ui.cbox_curv_channel.currentText()
-        wanna_store = True if chan == "RGB" else False
+        wanna_store = (True if chan == "RGB" else False) and wanna_store
         # 否则会出现三个通道的曲线都一样的情况,
         # 因为AdjustCommand只能存储一个通道的曲线, 如果全部都存储可以解决, 但是没必要
         pre_img = None

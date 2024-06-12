@@ -157,7 +157,7 @@ class MainWindow():
             value = self.ui.slider_right.value()
             img = self.funcs.Saturation(img, value)
         elif self.ui.cbox_function.currentText() == "调整曲线":
-            img = self.ca.update(is_prev = False, wanna_return = True)
+            img = self.ca.update(is_prev = False, wanna_return = True, wanna_store=False)
         else:
             return
         self.handle_img = img
