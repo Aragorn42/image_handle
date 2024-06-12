@@ -255,7 +255,7 @@
   <customwidget>
    <class>MyLabel</class>
    <extends>QLabel</extends>
-   <header>MyWidget.MyLabel</header>
+   <header>my_widget.MyLabel</header>
   </customwidget>
  </customwidgets>
  <resources/>
